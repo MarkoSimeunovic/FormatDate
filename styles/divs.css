@@ -1,0 +1,31 @@
+
+div {
+	 display:  block;
+}
+
+div.roundBox {   
+    margin: 15px  !important; 
+    padding:  15px;
+    border :  none;
+    border-radius: 6px; 
+    background-color: aquamarine; 
+}
+
+div.highliht {
+    background-color: #99ccff; 
+}
+
+div.fixedWidth {
+    width  : 400px !important;
+}
+
+div.maxWidth {
+    max-width  : 300px !important;
+}
+
+
+
+
+
+
+

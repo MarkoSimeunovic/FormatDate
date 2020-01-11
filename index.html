@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- META -->
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- NASLOV -->
+		<title>Форматирање датума</title>
+
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon"  />		
+        
+        
+        <!-- STILOVI   -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+		<link  rel="stylesheet" type="text/css" href="styles/main.css"  />
+
+		<link  rel="stylesheet" type="text/css" href="styles/divs.css"  />
+
+        
+        <!-- SKRIPTE -->
+        <script type="text/javascript" src="scripts/dateFormat.js" ></script>
+
+
+	</head>
+
+	<body onload="loadMe()">
+
+        <!-- Bootstrap Naslov -->
+		<div class="jumbotron text-center">
+		  <h1>Форматирање датума</h1>
+		
+
+
+        </div>
+        
+        <!-- Bootstrap Responsive Container 1 -->  
+		<div class="container">
+        
+            <div class="row">
+				<div class="col-sm-4">
+                
+                    
+                 <select  onchange="changeLanguage(this.value);" id="lang">
+                    <option value="en-US" selected="selected">Енглески</option>
+                    <option value="sr-Latn-RS">Српски (Латиница)</option>
+                    <option value="sr-Cyrl-RS" >Српски (Ћирилица)</option>
+                <select> <br><br>
+                
+                </div> 
+            </div>
+            
+            <div class="row">
+                    
+                    <div class="roundBox fixedWidth">
+                        
+                        <label> Формат: </label> 
+                        <input type="text" id="dateFormat" value="ddd, dd. MMM. yyyy HH:mm:ss Z"></input>
+                    
+                    </div> 
+            </div>         
+            <div class="row">   
+            
+                    <div class="roundBox fixedWidth highliht" >  
+                    
+                        <label> Локални датум: </label> 
+                        <input type="text" id="dateGMT" value=""></input>
+                        <button class="blue" onclick="formatDate_Call();">Упиши датум</button>
+                    
+                    </div>
+            </div> 
+            <div class="row"> 
+             
+                    <div class="roundBox fixedWidth highliht">
+                    
+                        <label> Универзални датум: </label> 
+                        <input type="text" id="dateUTC" value=""></input>
+                        <button class="blue" onclick="formatUTCDate_Call();">Упиши датум</button>
+                        
+                    </div>
+                          
+        	</div> <br><br>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <button onclick="writeDate();">Нови датум</button>
+                </div>
+            </div>
+            
+            <div class="row">  
+			
+                <div class="col-sm-4">
+                              
+                    <div class="roundBox maxWidth">
+                        
+                        <label> Година: </label> 
+                        <input type="number" id="year" value=2020></input>
+                        
+                        <label> Месец: </label> 
+                        <input type="number" id="month" value=1></input>
+                        
+                        <label> Дан: </label> 
+                        <input type="number" id="day" value=10></input>
+                    </div>
+                </div>
+                
+                <div class="col-sm-4">                 
+                    <div class="roundBox maxWidth">
+                        
+                        <label> Сати: </label> 
+                        <input type="number" id="hours" value=21></input>
+                        
+                        <label> Минута: </label> 
+                        <input type="number" id="minutes" value=5></input>
+                      
+                        <label> Секунди: </label>                         
+                        <input type="number" id="seconds" value=37></input>
+                        
+                        <label> Милисекунди: </label> 
+                        <input type="number" id="miliseconds" value=583></input>
+                        
+                    </div> 
+                    
+                    
+                    
+                </div>
+
+            </div> <br><br>
+
+            <!-- Tabela -->
+			<div class="row">
+				<div class="col-sm-4">
+					<table>
+                        <tr>
+							<th>Формат:</th>
+							<th>Значење:</th>
+						</tr>
+						<tr>
+							<th>d, D</th>
+							<td>Дан</th>
+						</tr>
+							<th>M</th>
+							<td>Месец</td>			
+						<tr>
+							<th>y,Y</th>
+							<td>Година</td>
+						</tr>
+                        <tr>
+							<th>h</th>
+							<td>Сати (0-12)</th>
+						</tr>
+                        <tr>
+							<th>H</th>
+							<td>Сати (0-24)</th>
+						</tr>
+							<th>m</th>
+							<td>Минута</td>			
+						<tr>
+							<th>s</th>
+							<td>Секунди</td>
+						</tr>
+                        <tr>
+							<th>S,f,F</th>
+							<td>Милисекунди</th>
+						</tr>
+                        <tr>
+							<th>t,T</th>
+							<td>АМ - ПМ</th>
+						</tr>
+							<th>z</th>
+							<td>Временска зона ( +01:00 )</td>			
+						<tr>
+							<th>Z</th>
+							<td>Временска зона ( ГМТ+01:00 или УТЦ)</td>   
+						</tr>
+                        <tr>
+							<th>g,G; u,U</th>
+							<td>ГМТ или УТЦ</td>  
+						</tr>
+					</table>
+				</div> 
+			</div> <br>
+            
+			
+        </div> <br>
+		  
+            
+<!--   <script>
+var x =  document.getElementsByTagName("SELECT")[0];
+console.log(x.innerHTML);
+
+//x.innerHTML = "";
+
+x.innerHTML = "" +
+	"<option value=\"en-US\" selected=\"selected\">Енглески</option>" +
+     "<option value=\"sr-Latn-RS\">Српски (Латиница)</option>" +
+      "<option value=\"sr-Cyrl-RS\">Српски (Ћирилица)</option> ";
+
+
+  	<select id="Local" onchange="changeLanguage(this.value);">
+      <option value="en-US" selected="selected">Енглески</option>
+      <option value="sr-Latn-RS">Српски (Латиница)</option>
+      <option value="sr-Cyrl-RS" >Српски (Ћирилица)</option>
+    <select> <br><br>
+</script>    -->
+
+	</body>
+</html>
