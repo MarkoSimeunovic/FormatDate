@@ -383,18 +383,25 @@ class dateParser  {
     }
     
     getMilliseconds3(){
-        var val = "" + myDate.getMilliseconds();
-        return val.substr(0,3);
+        var val = myDate.getMilliseconds();
+        var ret = "" + val;
+        if(val < 10 )  { ret =  "00" + val; }
+        else if(val < 100) { ret =  "0" + val; }
+        return ret.substr(0,3);
     }
     
     getMilliseconds2(){
-        var val = "" + myDate.getMilliseconds();
-        return val.substr(0,2);
+        var val = myDate.getMilliseconds();
+        var ret = "" + val;
+        ret = ret.substr(0,2);
+        if(val < 10 )  { ret =  "00" + val; }
+        return ret.substr(0,2);
     }
     
     getMilliseconds(){
-        var val = "" + myDate.getMilliseconds();
-        return val.substr(0,1);
+        var val = myDate.getMilliseconds();
+        var ret = "" + val;
+        ret = ret.substr(0,1);
     }    
    
     getTimezoneOffset3() {
@@ -641,19 +648,26 @@ class UTCdateParser  {
     }
     
     getMilliseconds3(){
-        var val = "" + myDate.getUTCMilliseconds();
-        return val.substr(0,3);
+        var val = myDate.getUTCMilliseconds();
+        var ret = "" + val;
+        if(val < 10 )  { ret =  "00" + val; }
+        else if(val < 100) { ret =  "0" + val; }
+        return ret.substr(0,3);
     }
     
     getMilliseconds2(){
-        var val = "" + myDate.getUTCMilliseconds();
-        return val.substr(0,2);
+        var val = myDate.getUTCMilliseconds();
+        var ret = "" + val;
+        ret = ret.substr(0,2);
+        if(val < 10 )  { ret =  "00" + val; }
+        return ret.substr(0,2);
     }
     
     getMilliseconds(){
-        var val = "" + myDate.getUTCMilliseconds();
-        return val.substr(0,1);
-    }    
+        var val = myDate.getUTCMilliseconds();
+        var ret = "" + val;
+        ret = ret.substr(0,1);
+    } 
     
     getTimezoneOffset3() {
         return "";
@@ -848,13 +862,13 @@ function date2str(date, format,toUTC = false) {
             switch(vLength) {
                 
                 case 1:
-                    ret = myDateParser.getMiliseconds();
+                    ret = myDateParser.getMilliseconds();
                     break;
                 case 2:
-                    ret = myDateParser.getMiliseconds2();
+                    ret = myDateParser.getMilliseconds2();
                     break;    
                 default:
-                    ret = myDateParser.getMiliseconds3();
+                    ret = myDateParser.getMilliseconds3();
                     break;
             }
         }
@@ -997,7 +1011,7 @@ function writeDate() {
     document.getElementById("hours").value = d.getHours();
     document.getElementById("minutes").value = d.getMinutes();
     document.getElementById("seconds").value = d.getSeconds();;
-    document.getElementById("miliseconds").value = d.getMilliseconds();
+    document.getElementById("milliseconds").value = d.getMilliseconds();
 
     myDate = d;
     
@@ -1016,7 +1030,7 @@ function readDate() {
     d.setHours(document.getElementById("hours").value );
     d.setMinutes(document.getElementById("minutes").value );
     d.setSeconds(document.getElementById("seconds").value );;
-    d.setMilliseconds(document.getElementById("miliseconds").value );
+    d.setMilliseconds(document.getElementById("milliseconds").value );
 
     myDate = d;
     return myDate;
@@ -1028,6 +1042,9 @@ function loadMe() {
 document.getElementById("lang").selectedIndex=0;
 
 writeDate();
+
+formatDate_Call();
+formatUTCDate_Call();
 
 };
 
