@@ -383,26 +383,25 @@ class dateParser  {
     }
     
     getMilliseconds3(){
-        var val = myDate.getMilliseconds();
-        var ret = "" + val;
-        if(val < 10 )  { ret =  "00" + val; }
-        else if(val < 100) { ret =  "0" + val; }
-        return ret.substr(0,3);
+        var val = "" + myDate.getMilliseconds();
+        val = val.substr(0,3);
+        if(val.length == 2){ val += "0";}
+        if(val.length == 1){ val += "00";} 
+        return val;
     }
     
     getMilliseconds2(){
-        var val = myDate.getMilliseconds();
-        var ret = "" + val;
-        ret = ret.substr(0,2);
-        if(val < 10 )  { ret =  "00" + val; }
-        return ret.substr(0,2);
+        var val = "" + myDate.getMilliseconds();
+        val = val.substr(0,2);
+        if(val.length == 1){ val += "0";}
+        return val;
+        
     }
     
     getMilliseconds(){
-        var val = myDate.getMilliseconds();
-        var ret = "" + val;
-        ret = ret.substr(0,1);
-    }    
+        var val = "" + myDate.getMilliseconds();
+        return val.substr(0,1);
+    } 
    
     getTimezoneOffset3() {
         var tzOff = myDate.getTimezoneOffset(),
@@ -646,28 +645,27 @@ class UTCdateParser  {
     getSeconds(){
         return "" + myDate.getUTCSeconds();
     }
-    
+
     getMilliseconds3(){
-        var val = myDate.getUTCMilliseconds();
-        var ret = "" + val;
-        if(val < 10 )  { ret =  "00" + val; }
-        else if(val < 100) { ret =  "0" + val; }
-        return ret.substr(0,3);
+        var val = "" + myDate.getUTCMilliseconds();
+        val = val.substr(0,3);
+        if(val.length == 2){ val += "0";}
+        if(val.length == 1){ val += "00";} 
+        return val;
     }
     
     getMilliseconds2(){
-        var val = myDate.getUTCMilliseconds();
-        var ret = "" + val;
-        ret = ret.substr(0,2);
-        if(val < 10 )  { ret =  "00" + val; }
-        return ret.substr(0,2);
+        var val = "" + myDate.getUTCMilliseconds();
+        val = val.substr(0,2);
+        if(val.length == 1){ val += "0";}
+        return val;
+        
     }
     
     getMilliseconds(){
-        var val = myDate.getUTCMilliseconds();
-        var ret = "" + val;
-        ret = ret.substr(0,1);
-    } 
+        var val = "" + myDate.getUTCMilliseconds();
+        return val.substr(0,1);
+    }  
     
     getTimezoneOffset3() {
         return "";
@@ -1023,14 +1021,71 @@ function readDate() {
 
     var d = new Date();
     
-    d.setFullYear( document.getElementById("year").value );
-    d.setMonth( document.getElementById("month").value - 1 );
-    d.setDate( document.getElementById("day").value );
-    
-    d.setHours(document.getElementById("hours").value );
-    d.setMinutes(document.getElementById("minutes").value );
-    d.setSeconds(document.getElementById("seconds").value );;
-    d.setMilliseconds(document.getElementById("milliseconds").value );
+    var fy = parseInt( document.getElementById("year").value );
+
+ 		if(isUndefined(fy)){
+    		fy=0;
+  		} 
+
+  		d.setFullYear( fy );
+
+
+    var mon = parseInt(  document.getElementById("month").value - 1 );
+
+        if(isUndefined(mon)){
+    		mon=0;
+ 	    } 
+
+    	d.setMonth( mon );
+
+    var dt = parseInt( document.getElementById("day").value );
+
+        if(isUndefined(dt)){
+    		dt=0;
+    	} 
+
+    	d.setDate( dt );
+
+    var hs = parseInt( document.getElementById("hours").value );
+
+        if(isUndefined(hs)){
+    		hs=0;
+    	} 
+
+   		d.setHours( hs );
+
+    var min = parseInt( document.getElementById("minutes").value );
+
+        if(isUndefined(min)){
+    		min=0;
+    	} 
+
+    	d.setMinutes( min );
+
+
+    var sec = parseInt( document.getElementById("seconds").value );
+
+        if(isUndefined(sec)){
+    		sec=0;
+    	} 
+
+    	d.setSeconds( sec );
+
+
+    var ms = parseInt(document.getElementById("milliseconds").value);
+
+
+	    if(isUndefined(ms)){
+	    	ms=0;
+	    } else {
+	    	var msr = "" + ms;
+	    	if(msr.length > 3) {
+	    		msr = msr.substr(0,3);
+	    	}
+	    	ms = parseInt(msr);
+	    }
+
+	    d.setMilliseconds(ms);
 
     myDate = d;
     return myDate;
@@ -1039,12 +1094,12 @@ function readDate() {
 function loadMe() {
 
  
-document.getElementById("lang").selectedIndex=0;
+	document.getElementById("lang").selectedIndex=0;
 
-writeDate();
+	writeDate();
 
-formatDate_Call();
-formatUTCDate_Call();
+	formatDate_Call();
+	formatUTCDate_Call();
 
 };
 
