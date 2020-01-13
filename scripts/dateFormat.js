@@ -5,25 +5,29 @@ function isUndefined(input) {
     return input ===  void 0 || input === null; 
 };
 
+
 function isArray(input) {
-    return input instanceof Array || Object.prototype.toString.call(input) === '[object Array]';
+    return !isUndefined(input) &&  ( input instanceof Array || Object.prototype.toString.call(input) === '[object Array]' );
 };
 
 function isNumber(input) {
-    return typeof input === 'number' || Object.prototype.toString.call(input) === '[object Number]';
+    return !isUndefined(input) &&  ( typeof input === 'number' || Object.prototype.toString.call(input) === '[object Number]' );
+};
+
+function isNaN(input) {
+return  isNumber(input) && ( "" + input === "NaN" | input === Number.POSITIVE_INFINITY || input === Number.NEGATIVE_INFINITY );
 };
   
-
 function isString(input) {
-    return typeof input === 'string' || Object.prototype.toString.call(input) === '[object String]';
+    return !isUndefined(input) &&  ( typeof input === 'string' || Object.prototype.toString.call(input) === '[object String]' );
 };
 
 function isDate(input) {
-    return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
+    return !isUndefined(input) &&  ( input instanceof Date || Object.prototype.toString.call(input) === '[object Date]' );
 };
 
 function isLanguage(input) {
-    return input instanceof Language || Object.prototype.toString.call(input) === '[object Language]';
+    return !isUndefined(input) &&  ( input instanceof Language || Object.prototype.toString.call(input) === '[object Language]' );
 };
     
 
@@ -1016,74 +1020,126 @@ function writeDate() {
 
 };
 
+	class numberReader {
+
+	constructor() {
+		this.value = 0;
+
+		this.follback = 0;
+	 }
+
+	absoluteValue(){
+	 	if( isNaN(this.value) ) {	
+			return this.follback;
+		}
+
+	 	if(this.value < 0) {
+			return this.value * -1;
+		} else {
+			return this.value;
+		}
+	 }
+
+
+	readNumber(str) {
+
+		var num = parseInt(str) ;
+
+
+		if(!isNaN(num)) {
+		this.value = num;
+
+		return num;
+		}
+
+		return this.follback;
+
+
+	};
+
+
+	
+};
+
 
 function readDate() {
 
     var d = new Date();
-    
-    var fy = parseInt( document.getElementById("year").value );
 
- 		if(isUndefined(fy)){
-    		fy=0;
+    readNum = new numberReader();
+    readNum.follback = -1;
+    
+    //var fy = parseInt( document.getElementById("year").value );
+    var fy = readNum.readNumber( document.getElementById("year").value );
+
+
+  		if(fy < 1000 || fy > 9999){
+    		fy=d.getFullYear();	
   		} 
 
   		d.setFullYear( fy );
 
 
-    var mon = parseInt(  document.getElementById("month").value - 1 );
+    var mon = readNum.readNumber(  document.getElementById("month").value - 1 );
 
-        if(isUndefined(mon)){
-    		mon=0;
- 	    } 
+
+ 	    if(mon < 1 || mon > 12){
+    		mon=d.getMonth();	
+  		} 
 
     	d.setMonth( mon );
 
-    var dt = parseInt( document.getElementById("day").value );
+    var dt = readNum.readNumber( document.getElementById("day").value );
 
-        if(isUndefined(dt)){
-    		dt=0;
-    	} 
+
+    	if(dt < 1 || dt > 31){
+    		dt=d.getDate();	
+  		} 
 
     	d.setDate( dt );
 
-    var hs = parseInt( document.getElementById("hours").value );
+    var hs = readNum.readNumber( document.getElementById("hours").value );
 
-        if(isUndefined(hs)){
-    		hs=0;
-    	} 
+    	if(hs < 0 || hs > 60){
+    		hs=d.getHours();	
+  		} 
 
    		d.setHours( hs );
 
-    var min = parseInt( document.getElementById("minutes").value );
+    var min = readNum.readNumber( document.getElementById("minutes").value );
 
-        if(isUndefined(min)){
-    		min=0;
-    	} 
+
+
+    	if(min < 0 || min > 60){
+    		min=d.getMinutes();	
+  		}
 
     	d.setMinutes( min );
 
 
-    var sec = parseInt( document.getElementById("seconds").value );
+    var sec = readNum.readNumber( document.getElementById("seconds").value );
+ 
 
-        if(isUndefined(sec)){
-    		sec=0;
-    	} 
+    	if(sec < 0 || sec > 60){
+    		sec=d.getSeconds();	
+  		}
 
     	d.setSeconds( sec );
 
 
-    var ms = parseInt(document.getElementById("milliseconds").value);
+    var ms = readNum.readNumber(document.getElementById("milliseconds").value);
 
 
-	    if(isUndefined(ms)){
-	    	ms=0;
-	    } else {
-	    	var msr = "" + ms;
-	    	if(msr.length > 3) {
-	    		msr = msr.substr(0,3);
-	    	}
-	    	ms = parseInt(msr);
-	    }
+    	var msr = "" + ms;
+
+    	if(msr.length > 3) {
+    		msr = msr.substr(0,3);
+    		ms = readNum.readNumber(msr);
+    	}
+
+	    if(ms < 0 || ms > 999){
+    		ms = d.getMilliseconds();	
+  		}
 
 	    d.setMilliseconds(ms);
 
