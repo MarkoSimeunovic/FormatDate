@@ -39,6 +39,62 @@ function daysInYear(year) {
     return isLeapYear(year) ? 366 : 365;
 };
 
+function daysInMonth(month) {
+
+    if(!isNumber(month) || month < 0 || month > 11) {
+        return 0;
+    }
+
+    switch(month) {
+        case 1:
+            return isLeapYear(year) ? 29: 28;
+
+        case 3:
+        case 5:
+        case 8:
+        case 10:
+            return 30;
+
+        default:
+            return 31;
+    }
+
+};
+
+function daysInMonthFast(month, isLeap = false) {
+
+    if(!isNumber(month) || month < 0 || month > 11) {
+        return 0;
+    }
+
+    switch(month) {
+        case 1:
+            return isLeap ? 29: 28;
+
+        case 3:
+        case 5:
+        case 8:
+        case 10:
+            return 30;
+
+        default:
+            return 31;
+    }
+
+};
+
+
+function readNumber(str,follback) {
+
+    var num = parseInt(str) ;
+
+    if(!isNaN(num)) {
+        return num;   
+    }
+
+    return follback;
+};
+
 
 function map(arr, fn) {
     var i, arrLen = arr.length, res = new Array(arrLen);
@@ -51,21 +107,26 @@ function map(arr, fn) {
 function getStrings(array, chars = 3) {
    
    if(chars < 0) {
-   	   return map(array,function(value, index) {    
-       					 return value;
+       return map(array,function(value, index) {    
+                         return value;
     });   
    }
    
    return map(array,function(value, index) {    
-        	  return value.substr(0,chars);
+              return value.substr(0,chars);
     });
 };
 
 
+var settings = {
+    leapYear: false,
+    month: 0
+};
+
 class Language  {
 
 
-	constructor() {
+    constructor() {
         
         this.langName = "en-US";     
         this.AM = "AM";
@@ -96,22 +157,22 @@ class Language  {
 class Languages  {
 
         
-	addLocale(lang,set = false) {
-		if(isLanguage) {
+    addLocale(lang,set = false) {
+        if(isLanguage) {
         
-        	if(!this.hasLocale(lang.langName)) {
-				this.langs.push(lang);
+            if(!this.hasLocale(lang.langName)) {
+                this.langs.push(lang);
                 
              } else {
                 console.log("addLocale: <Language> " + lang.langName + "већ постоји.");
              }
-       			 
-         	 if(set) {
-            	var langId = this.findLocale(lang.langName);
-           		this.langID = langId;                 
-         	 }
+                 
+             if(set) {
+                var langId = this.findLocale(lang.langName);
+                this.langID = langId;                 
+             }
            return true;      
-     	 }
+         }
          console.log("addLocale: параметар <lang> мора бити тип <Language> !");
          return false;
     };
@@ -138,8 +199,8 @@ class Languages  {
           
         } else if(isLanguage(locale)) { 
             langId = this.findLocale(locale.langName);
-          	  if (  langId < 0 || langId >= this.langs.length  )  {
-           			 addLocale(locale,true);
+              if (  langId < 0 || langId >= this.langs.length  )  {
+                     addLocale(locale,true);
             }   
         } else {
         console.log("setLocale: параметар \"locale\" није валидан !");
@@ -155,9 +216,9 @@ class Languages  {
         if(isString(locale)) {
             var  langId, len = this.langs.length;
             for (langId = 0; langId < len; langId++) {
-              	 if (this.langs[langId].langName == locale) {
-                 	  return langId;
-              	 }
+                 if (this.langs[langId].langName == locale) {
+                      return langId;
+                 }
             }
         }
         return -1;
@@ -171,35 +232,35 @@ class Languages  {
     };
     
     getLocale(locale) {
-    	
+        
         var langId;
                      
         if(isNumber(locale)) { 
             langId = locale;
             if (  langId < 0 || langId >= this.langs.length  )  { 
- 				langId = this.langID;
+                langId = this.langID;
             }  
- 		} else if(isString(locale)) {
+        } else if(isString(locale)) {
             langId =  this.findLocale(locale);
             if (langId < 0) {
-         		 langId = this.langID;
+                 langId = this.langID;
                }
               
         } else {
-      		 langId = this.langID;
+             langId = this.langID;
         } 
     
 
         return this.langs[langId];
     };
     
-	constructor() {
+    constructor() {
         
-		var locale = new Language(); 
+        var locale = new Language(); 
         
-    	this.langs = [];
+        this.langs = [];
         
-    	this.langs.push(locale);
+        this.langs.push(locale);
         
         this.langID = 0;
 
@@ -218,11 +279,6 @@ var myLanguages = new Languages();
 function setLanguages() {
 
     if(!myLanguages.hasLocale("sr-Cyrl-RS")) {
-       
-       
-        
-       //myLanguages.addLocale(_localeName, set = false)
-       
       
       var locale_sc = new Language();   
            
@@ -280,135 +336,166 @@ function setLanguages() {
 setLanguages();
 
 
-
-var myDate =  new Date();
 var myLangId = -1;
+
+
+class loocalDateParams {
+
+    constructor(date) {
+
+        this.date = date.getDate();
+        this.month = date.getMonth();
+        this.year = date.getFullYear();
+        this.hours = date.getHours();
+        this.minutes = date.getMinutes();
+        this.seconds = date.getSeconds();
+        this.milliseconds = date.getMilliseconds();
+        this.TimezoneOffset = date.getTimezoneOffset();
+
+    }
+};
+
+class universalDateParams {
+
+    constructor(date) {
+
+        this.date = date.getUTCDate();
+        this.month = date.getUTCUTCUTCMonth();
+        this.year = date.getUTCUTCFullYear();
+        this.hours = date.getUTCHours();
+        this.minutes = date.getUTCMinutes();
+        this.seconds = date.getUTCSeconds();
+        this.milliseconds = date.getUTCMilliseconds();
+        this.TimezoneOffset = date.getTimezoneOffset();
+
+    }
+};
 
 class dateParser  {    
  
-    getFullDay(){
-        return myLanguages.getLocale(myLangId).days[myDate.getDay()];
+    getFullDay() {
+        return myLanguages.getLocale(myLangId).days[this.day];
     }
     
-    getShortDay(){    
-         return myLanguages.getLocale(myLangId).shortDays[myDate.getDay()]; 
+    getShortDay() {    
+         return myLanguages.getLocale(myLangId).shortDays[this.day]; 
     }
 
-    getDate2(){
-        var val = myDate.getDate();
+    getDate2() {
+        var val = this.date;
         return val < 10 ? "0" + val : "" + val;
         
     }
     
-    getDate(){
-        return "" + myDate.getDate();
+    getDate() {
+        return "" + this.date;
     }
     
-    getFullMonth(){
-        return myLanguages.getLocale(myLangId).months[myDate.getMonth()];
+    getFullMonth() {
+        return myLanguages.getLocale(myLangId).months[this.month];
     }
     
-    getShortMonth(){    
-         return myLanguages.getLocale(myLangId).shortMonths[myDate.getMonth()]; 
+    getShortMonth() {    
+         return myLanguages.getLocale(myLangId).shortMonths[this.month]; 
     }  
     
-    getMonth2(){
-        var val = myDate.getMonth() + 1;
+    getMonth2() {
+        var val = this.month + 1;
         return val < 10 ? "0" + val : "" + val;
        
     }
     
-    getMonth(){
-        return "" + myDate.getMonth() + 1;
+    getMonth() {
+        return "" + this.month + 1;
     } 
      
 
-    getFullYear(){
-        return "" + myDate.getFullYear();  
+    getFullYear() {
+        return "" + this.year;  
     }
     
-    getYear3(){
-        var val = "" + myDate.getFullYear();
+    getYear3() {
+        var val = "" + this.year;
         return val.slice(-3);  
     }
     
-    getYear2(){
-        var val = "" + myDate.getFullYear();
+    getYear2() {
+        var val = "" + this.year;
         return val.slice(-2);
     }
     
-    getYear(){
-        var val = "" + myDate.getFullYear();
+    getYear() {
+        var val = "" + this.year;
         val[2] == "0" ? val = val.slice(-1): val = val.slice(-2);
         return val;
     }
     
-    getHours24_2(){
-        var val = myDate.getHours();
+    getHours24_2() {
+        var val = this.hours;
         return val < 10 ? "0" + val : "" + val;
     }
     
-    getHours24(){
-        return "" + myDate.getHours();
+    getHours24() {
+        return "" + this.hours;
     }
     
-    getHours12_2(){
-        var val = myDate.getHours();
+    getHours12_2() {
+        var val = this.hours;
         if(val > 12) { 
         val-=12;
         }        
         return val < 10 ? "0" + val : "" + val;
     }
     
-    getHours12(){
-        var val = myDate.getHours();
+    getHours12() {
+        var val = this.hours;
         if(val > 12) { 
         val-=12;
         }   
         return "" + myDate.getHours();
     }
     
-    getMinutes2(){
-        var val = myDate.getMinutes();
+    getMinutes2() {
+        var val = this.minutes;
         return val < 10 ? "0" + val : "" + val;
     }
     
-    getMinutes(){
-        return "" + myDate.getMinutes();
+    getMinutes() {
+        return "" + this.minutes;
     }
     
-    getSeconds2(){
-        var val = myDate.getSeconds();
+    getSeconds2() {
+        var val = this.seconds;
         return val < 10 ? "0" + val : "" + val;
     }
     
-    getSeconds(){
-        return "" + myDate.getSeconds();
+    getSeconds() {
+        return "" + this.seconds;
     }
     
-    getMilliseconds3(){
-        var val = "" + myDate.getMilliseconds();
+    getMilliseconds3() {
+        var val = "" + this.milliseconds;
         val = val.substr(0,3);
-        if(val.length == 2){ val += "0";}
-        if(val.length == 1){ val += "00";} 
+        if(val.length == 2) { val += "0";}
+        if(val.length == 1) { val += "00";} 
         return val;
     }
     
-    getMilliseconds2(){
-        var val = "" + myDate.getMilliseconds();
+    getMilliseconds2() {
+        var val = "" + this.milliseconds;
         val = val.substr(0,2);
-        if(val.length == 1){ val += "0";}
+        if(val.length == 1) { val += "0";}
         return val;
         
     }
     
-    getMilliseconds(){
-        var val = "" + myDate.getMilliseconds();
+    getMilliseconds() {
+        var val = "" + this.milliseconds;
         return val.substr(0,1);
     } 
    
     getTimezoneOffset3() {
-        var tzOff = myDate.getTimezoneOffset(),
+        var tzOff = this.timezoneOffset,
         fmt="",
         h,
         m,
@@ -439,7 +526,7 @@ class dateParser  {
     }
     
     getTimezoneOffset2() {
-        var tzOff = myDate.getTimezoneOffset(),
+        var tzOff = this.timezoneOffset,
         fmt="",
         h,
         m,
@@ -468,7 +555,7 @@ class dateParser  {
     }
 
     getTimezoneOffset() {
-        var tzOff = myDate.getTimezoneOffset(),
+        var tzOff = this.timezoneOffset,
         fmt="",
         h,
         m,
@@ -503,15 +590,15 @@ class dateParser  {
         return fmt;    
     }
     
-    getTimezoneInfo3(){
+    getTimezoneInfo3() {
         return myLanguages.getLocale(myLangId).GMT + this.getTimezoneOffset3();
     }
     
-    getTimezoneInfo2(){
+    getTimezoneInfo2() {
         return myLanguages.getLocale(myLangId).GMT + this.getTimezoneOffset2();
     }
     
-    getTimezoneInfo(){
+    getTimezoneInfo() {
         return myLanguages.getLocale(myLangId).GMT + this.getTimezoneOffset();
     }
     
@@ -539,9 +626,28 @@ class dateParser  {
         return myLanguages.getLocale(myLangId).GMT;
     }
     
-    parseDate(date) { 
-        myDate = date;
+    parseDate(date) {
+
+        if(!isDate(date)) {
+            date = new Date()
+        } 
+
+        this.day = date.getDay();
+        this.date = date.getDate();
+        this.month = date.getMonth();
+        this.year = date.getFullYear();
+        this.hours = date.getHours();
+        this.minutes = date.getMinutes();
+        this.seconds = date.getSeconds();
+        this.milliseconds = date.getMilliseconds();
+        this.timezoneOffset = date.getTimezoneOffset();
     }
+
+    constructor(date) {
+
+        this.parseDate(date);
+    }
+
       
 };
 
@@ -550,124 +656,124 @@ class dateParser  {
 class UTCdateParser  {
     
  
-    getFullDay(){
-        return myLanguages.getLocale(myLangId).days[myDate.getUTCDay()];
+    getFullDay() {
+        return myLanguages.getLocale(myLangId).days[this.day];
     }
     
-    getShortDay(){    
-         return myLanguages.getLocale(myLangId).shortDays[myDate.getUTCDay()]; 
+    getShortDay() {    
+         return myLanguages.getLocale(myLangId).shortDays[this.day]; 
     }
 
-    getDate2(){
-        var val = myDate.getUTCDate();
+    getDate2() {
+        var val = this.date;
         return val < 10 ? "0" + val : "" + val;
         
     }
     
-    getDate(){
-        return "" + myDate.getUTCDate();
+    getDate() {
+        return "" + this.date;
     }
     
-    getFullMonth(){
-        return myLanguages.getLocale(myLangId).months[myDate.getUTCMonth()];
+    getFullMonth() {
+        return myLanguages.getLocale(myLangId).months[this.month];
     }
     
-    getShortMonth(){    
-         return myLanguages.getLocale(myLangId).shortMonths[myDate.getUTCMonth()]; 
+    getShortMonth() {    
+         return myLanguages.getLocale(myLangId).shortMonths[this.month]; 
     }  
     
-    getMonth2(){
-        var val = myDate.getUTCMonth() + 1;
+    getMonth2() {
+        var val = this.month + 1;
         return val < 10 ? "0" + val : "" + val;
        
     }
     
-    getMonth(){
-        return "" + myDate.getUTCMonth() + 1;
+    getMonth() {
+        return "" + this.month + 1;
     } 
      
 
-    getFullYear(){
-        return "" + myDate.getUTCFullYear();  
+    getFullYear() {
+        return "" + this.year;  
     }
     
-    getYear3(){
-        var val = "" + myDate.getUTCFullYear();
+    getYear3() {
+        var val = "" + this.year;
         return val.slice(-3);  
     }
     
-    getYear2(){
-        var val = "" + myDate.getUTCFullYear();
+    getYear2() {
+        var val = "" + this.year;
         return val.slice(-2);
     }
     
-    getYear(){
-        var val = "" + myDate.getUTCFullYear();
+    getYear() {
+        var val = "" + this.year;
         val[2] == "0" ? val = val.slice(-1): val = val.slice(-2);
         return val;
     }
     
-    getHours24_2(){
-        var val = myDate.getUTCHours();
+    getHours24_2() {
+        var val = this.hours;
         return val < 10 ? "0" + val : "" + val;
     }
     
-    getHours24(){
-        return "" + myDate.getUTCHours();
+    getHours24() {
+        return "" + this.hours;
     }
     
-    getHours12_2(){
-        var val = myDate.getUTCHours();
+    getHours12_2() {
+        var val = this.hours;
         if(val > 12) { 
         val-=12;
         }        
         return val < 10 ? "0" + val : "" + val;
     }
     
-    getHours12(){
-        var val = myDate.getUTCHours();
+    getHours12() {
+        var val = this.hours;
         if(val > 12) { 
         val-=12;
         }   
-        return "" + myDate.getUTCHours();
+        return "" + this.hours;
     }
     
-    getMinutes2(){
-        var val = myDate.getUTCMinutes();
+    getMinutes2() {
+        var val = this.minutes;
         return val < 10 ? "0" + val : "" + val;
     }
     
-    getMinutes(){
-        return "" + myDate.getUTCMinutes();
+    getMinutes() {
+        return "" + this.minutes;
     }
     
-    getSeconds2(){
-        var val = myDate.getUTCSeconds();
+    getSeconds2() {
+        var val = this.seconds;
         return val < 10 ? "0" + val : "" + val;
     }
     
-    getSeconds(){
-        return "" + myDate.getUTCSeconds();
+    getSeconds() {
+        return "" + this.seconds;
     }
 
-    getMilliseconds3(){
-        var val = "" + myDate.getUTCMilliseconds();
+    getMilliseconds3() {
+        var val = "" + this.milliseconds;
         val = val.substr(0,3);
-        if(val.length == 2){ val += "0";}
-        if(val.length == 1){ val += "00";} 
+        if(val.length == 2) { val += "0";}
+        if(val.length == 1) { val += "00";} 
         return val;
     }
     
-    getMilliseconds2(){
-        var val = "" + myDate.getUTCMilliseconds();
+    getMilliseconds2() {
+        var val = "" + this.milliseconds;
         val = val.substr(0,2);
-        if(val.length == 1){ val += "0";}
+        if(val.length == 1) { val += "0";}
         return val;
         
     }
     
-    getMilliseconds(){
-        var val = "" + myDate.getUTCMilliseconds();
+    getMilliseconds() {
+        var val = "" + this.milliseconds;
         return val.substr(0,1);
     }  
     
@@ -683,15 +789,15 @@ class UTCdateParser  {
         return "";    
     }
     
-    getTimezoneInfo3(){
+    getTimezoneInfo3() {
         return myLanguages.getLocale(myLangId).UTC;
     }
     
-    getTimezoneInfo2(){
+    getTimezoneInfo2() {
         return myLanguages.getLocale(myLangId).UTC;
     }
     
-    getTimezoneInfo(){
+    getTimezoneInfo() {
         return myLanguages.getLocale(myLangId).UTC;
     }
     
@@ -713,7 +819,6 @@ class UTCdateParser  {
     
     getGMT() {
         return myLanguages.getLocale(myLangId).UTC;
-        //return "";
     }
    
     getUTC() {
@@ -721,7 +826,25 @@ class UTCdateParser  {
     }
     
     parseDate(date) { 
-        myDate = date;
+
+        if(!isDate(date)) {
+            date = new Date()
+        }
+
+        this.day = date.getUTCDay();
+        this.date = date.getUTCDate();
+        this.month = date.getUTCMonth();
+        this.year = date.getUTCFullYear();
+        this.hours = date.getUTCHours();
+        this.minutes = date.getUTCMinutes();
+        this.seconds = date.getUTCSeconds();
+        this.milliseconds = date.getUTCMilliseconds();
+
+    }
+
+    constructor(date) {
+
+        this.parseDate(date);
     }
       
 };
@@ -732,18 +855,17 @@ var nUTCDateParser = new UTCdateParser();
 
 function date2str(date, format,toUTC = false) {
   
- //myDate = new Date;
   
  var myDateParser;
  
  if (toUTC) {
- 	myDateParser = nUTCDateParser;
+    myDateParser = nUTCDateParser;
  } else {
-	myDateParser = nDateParser;
+    myDateParser = nDateParser;
  }
 
  myDateParser.parseDate(date);
-	
+    
          
     
    var y = format.replace(/(d+|D+|m+|M+|y+|Y+|h+|H+|s+|S+|f+|F+|z+|Z+|t+|T+|g+|G+|u+|U+)/gi, function(v) {
@@ -945,7 +1067,7 @@ function formatDate(date,format,isUTC = false) {
         console.log("Први параметар мора бити тип: Date")
         return "";
     }
-    if(!isString(format)){
+    if(!isString(format)) {
         console.log("Други параметар мора бити тип: String")
         return "";
     }
@@ -958,7 +1080,6 @@ function formatDate(date,format,isUTC = false) {
 
 
 
-//var my_Date = new Date();
 
 
 function formatDate_Call() {
@@ -966,7 +1087,6 @@ function formatDate_Call() {
 
     var format = document.getElementById("dateFormat").value;
 
-    //var dt = new Date();
     var dt = readDate();
 
     var ret = formatDate(dt,format);
@@ -982,7 +1102,6 @@ function formatUTCDate_Call() {
 
     var format = document.getElementById("dateFormat").value;
 
-    //var dt = new Date();
     var dt = readDate();
 
  
@@ -1014,148 +1133,232 @@ function writeDate() {
     document.getElementById("minutes").value = d.getMinutes();
     document.getElementById("seconds").value = d.getSeconds();;
     document.getElementById("milliseconds").value = d.getMilliseconds();
-
-    myDate = d;
-    
+   
 
 };
-
-	class numberReader {
-
-	constructor() {
-		this.value = 0;
-
-		this.follback = 0;
-	 }
-
-	absoluteValue(){
-	 	if( isNaN(this.value) ) {	
-			return this.follback;
-		}
-
-	 	if(this.value < 0) {
-			return this.value * -1;
-		} else {
-			return this.value;
-		}
-	 }
-
-
-	readNumber(str) {
-
-		var num = parseInt(str) ;
-
-
-		if(!isNaN(num)) {
-		this.value = num;
-
-		return num;
-		}
-
-		return this.follback;
-
-
-	};
-
-
-	
-};
-
 
 function readDate() {
 
     var d = new Date();
 
-    readNum = new numberReader();
-    readNum.follback = -1;
-    
-    //var fy = parseInt( document.getElementById("year").value );
-    var fy = readNum.readNumber( document.getElementById("year").value );
+   
+    var num = readNumber( document.getElementById("year").value , 1000);
 
+        d.setFullYear( num );
 
-  		if(fy < 1000 || fy > 9999){
-    		fy=d.getFullYear();	
-  		} 
+    num = readNumber( document.getElementById("month").value, 2) - 1;
 
-  		d.setFullYear( fy );
+        d.setMonth( num );
 
+    num = readNumber( document.getElementById("day").value, 1);
 
-    var mon = readNum.readNumber(  document.getElementById("month").value - 1 );
+        d.setDate( num );
 
+    num = readNumber( document.getElementById("hours").value, 0);
 
- 	    if(mon < 1 || mon > 12){
-    		mon=d.getMonth();	
-  		} 
+        d.setHours( num );
 
-    	d.setMonth( mon );
+    num = readNumber( document.getElementById("minutes").value, 0);
 
-    var dt = readNum.readNumber( document.getElementById("day").value );
+        d.setMinutes( num );
 
-
-    	if(dt < 1 || dt > 31){
-    		dt=d.getDate();	
-  		} 
-
-    	d.setDate( dt );
-
-    var hs = readNum.readNumber( document.getElementById("hours").value );
-
-    	if(hs < 0 || hs > 60){
-    		hs=d.getHours();	
-  		} 
-
-   		d.setHours( hs );
-
-    var min = readNum.readNumber( document.getElementById("minutes").value );
-
-
-
-    	if(min < 0 || min > 60){
-    		min=d.getMinutes();	
-  		}
-
-    	d.setMinutes( min );
-
-
-    var sec = readNum.readNumber( document.getElementById("seconds").value );
+    num = readNumber( document.getElementById("seconds").value, 0);
  
 
-    	if(sec < 0 || sec > 60){
-    		sec=d.getSeconds();	
-  		}
-
-    	d.setSeconds( sec );
+        d.setSeconds( num );
 
 
-    var ms = readNum.readNumber(document.getElementById("milliseconds").value);
+    num = readNumber(document.getElementById("milliseconds").value, 0);
+
+        d.setMilliseconds(num);
+
+    return d;
+};
 
 
-    	var msr = "" + ms;
+function yearChanged() {
 
-    	if(msr.length > 3) {
-    		msr = msr.substr(0,3);
-    		ms = readNum.readNumber(msr);
-    	}
+    var str =  document.getElementById("year").value;
 
-	    if(ms < 0 || ms > 999){
-    		ms = d.getMilliseconds();	
-  		}
+    if(str.length == 0) {
+        str="1000";
 
-	    d.setMilliseconds(ms);
+    } else if(str.length > 4) {
+        str = str.substr(0,4);
 
-    myDate = d;
-    return myDate;
+    } 
+
+    var num = readNumber( str , 1000);
+
+    if(num < 1000) {
+        num = 1000; 
+    }  else if(num > 9999) {
+        num = 9999;
+    }
+
+    settings.leapYear = isLeapYear(num);
+
+    document.getElementById("year").value = num;
+
+};
+
+function monthChanged() {
+
+    var str =  document.getElementById("month").value;
+
+    if(str.length == 0) {
+        str="1";
+
+    } else if(str.length > 2) {
+        str = str.substr(0,2);
+
+    } 
+
+    var num = readNumber( str , 1);
+
+    if(num < 1) {
+        num = 1; 
+    } else if(num > 12) {
+        num = 12;
+    }
+
+    settings.month = num - 1;
+    
+    dayChanged();
+
+    document.getElementById("month").value = num;
+
+};
+
+function dayChanged() {
+
+    var str =  document.getElementById("day").value;
+
+    if(str.length == 0) {
+        str="1";
+
+    } else if(str.length > 2) {
+        str = str.substr(0,2);
+
+    }
+
+    var num = readNumber( str , 1);
+
+    var max = daysInMonthFast(settings.month, settings.leapYear);;
+
+    if(num < 1) {
+        num = 1; 
+    } else if(num > max) {
+        num = max;
+    }
+
+    document.getElementById("day").value = num;
+
+};
+
+function hoursChanged() {
+
+    var str =  document.getElementById("hours").value;
+
+    if(str.length == 0) {
+        str="0";
+
+    } else if(str.length > 2) {
+        str = str.substr(0,2);
+
+    } 
+
+    var num = readNumber( str , 0);
+
+    if(num < 0) {
+        num = 0; 
+    } else if(num > 60) {
+        num = 60;
+    }
+
+    document.getElementById("hours").value = num;
+
+};
+
+function minutesChanged() {
+
+    var str =  document.getElementById("minutes").value;
+
+    if(str.length == 0) {
+        str="0";
+
+    } else if(str.length > 2) {
+        str = str.substr(0,2);
+
+    }
+
+    var num = readNumber( str , 0);
+
+    if(num < 0) {
+        num = 0; 
+    } else if(num > 60) {
+        num = 60;
+    }
+
+    document.getElementById("minutes").value = num;
+ 
+};
+
+function secondsChanged() {
+
+    var str =  document.getElementById("seconds").value;
+
+    if(str.length == 0) {
+        str="0";
+
+    } else if(str.length > 2) {
+        str = str.substr(0,2);
+
+    } 
+
+    var num = readNumber( str , 0);
+
+    if(num < 0) {
+        num = 0; 
+    } else if(num > 60) {
+        num = 60;
+    }
+
+    document.getElementById("seconds").value = num;
+
+};
+
+function millisecondsChanged() {
+
+    var str =  document.getElementById("milliseconds").value;
+
+    if(str.length == 0) {
+        str="0";
+
+    } else if(str.length > 3) {
+        str = str.substr(0,3);
+
+    }
+
+    var num = readNumber( str , 0);
+
+    if(num < 0) {
+        num = 0; 
+    }
+
+
+    document.getElementById("milliseconds").value = num;
+
 };
 
 function loadMe() {
 
  
-	document.getElementById("lang").selectedIndex=0;
+    document.getElementById("lang").selectedIndex=0;
 
-	writeDate();
+    writeDate();
 
-	formatDate_Call();
-	formatUTCDate_Call();
+    formatDate_Call();
+    formatUTCDate_Call();
 
 };
-
