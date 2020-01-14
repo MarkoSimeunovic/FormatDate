@@ -117,10 +117,16 @@ function getStrings(array, chars = 3) {
     });
 };
 
-
-var settings = {
-    leapYear: false,
-    month: 0
+ 
+var dateValues = {
+    isLeap: false,
+    year: 1000,
+    month: 0,
+    day: 0,
+    hours : 0,
+    minutes : 0,
+    seconds: 0,
+    milliseconds: 0
 };
 
 class Language  {
@@ -452,7 +458,7 @@ class dateParser  {
         if(val > 12) { 
         val-=12;
         }   
-        return "" + myDate.getHours();
+        return "" + this.hours;
     }
     
     getMinutes2() {
@@ -603,16 +609,16 @@ class dateParser  {
     }
     
     getAPM2() {
-        var val = myDate.getHours();
-        if(val > 12) { 
+        var val = this.hours;
+        if(val > 11) { 
             return myLanguages.getLocale(myLangId).PM;
         }                
         return myLanguages.getLocale(myLangId).AM;
     }
     
     getAPM() {
-        var val = myDate.getHours();
-        if(val > 12) { 
+        var val = this.hours;
+        if(val > 11) { 
             return myLanguages.getLocale(myLangId).PM.slice(0,1);
         }                
         return myLanguages.getLocale(myLangId).AM.slice(0,1);
@@ -802,16 +808,16 @@ class UTCdateParser  {
     }
     
     getAPM2() {
-        var val = myDate.getUTCHours();
-        if(val > 12) { 
+        var val = this.hours;
+        if(val > 11) { 
             return myLanguages.getLocale(myLangId).PM;
         }                
         return myLanguages.getLocale(myLangId).AM;
     }
     
     getAPM() {
-        var val = myDate.getUTCHours();
-        if(val > 12) { 
+        var val = this.hours;
+        if(val > 11) { 
             return myLanguages.getLocale(myLangId).PM.slice(0,1);
         }                
         return myLanguages.getLocale(myLangId).AM.slice(0,1);
@@ -1135,7 +1141,10 @@ function writeDate() {
     document.getElementById("milliseconds").value = d.getMilliseconds();
    
 
+    dateValuesChanged();
+      
 };
+
 
 function readDate() {
 
@@ -1164,9 +1173,7 @@ function readDate() {
 
     num = readNumber( document.getElementById("seconds").value, 0);
  
-
         d.setSeconds( num );
-
 
     num = readNumber(document.getElementById("milliseconds").value, 0);
 
@@ -1196,8 +1203,14 @@ function yearChanged() {
         num = 9999;
     }
 
-    settings.leapYear = isLeapYear(num);
+    dateValues.year = num;
+    dateValues.isLeap = isLeapYear(num);
+    
+    if(dateValues.month == 1) {
+        dayChanged();
+    }
 
+    
     document.getElementById("year").value = num;
 
 };
@@ -1222,9 +1235,11 @@ function monthChanged() {
         num = 12;
     }
 
-    settings.month = num - 1;
+    dateValues.month = num - 1;
     
-    dayChanged();
+     if(dateValues.month == 1) {
+            dayChanged();
+        }
 
     document.getElementById("month").value = num;
 
@@ -1244,14 +1259,15 @@ function dayChanged() {
 
     var num = readNumber( str , 1);
 
-    var max = daysInMonthFast(settings.month, settings.leapYear);;
+    var max = daysInMonthFast(dateValues.month, dateValues.isLeap);;
 
     if(num < 1) {
         num = 1; 
     } else if(num > max) {
         num = max;
     }
-
+    
+    dateValues.day = num;
     document.getElementById("day").value = num;
 
 };
@@ -1272,10 +1288,11 @@ function hoursChanged() {
 
     if(num < 0) {
         num = 0; 
-    } else if(num > 60) {
-        num = 60;
+    } else if(num > 23) {
+        num = 23;
     }
-
+    
+    dateValues.hours = num;
     document.getElementById("hours").value = num;
 
 };
@@ -1300,6 +1317,7 @@ function minutesChanged() {
         num = 60;
     }
 
+    dateValues.minutes = num;
     document.getElementById("minutes").value = num;
  
 };
@@ -1324,6 +1342,7 @@ function secondsChanged() {
         num = 60;
     }
 
+    dateValues.seconds = num;
     document.getElementById("seconds").value = num;
 
 };
@@ -1346,10 +1365,22 @@ function millisecondsChanged() {
         num = 0; 
     }
 
-
+    dateValues.milliseconds = num;
     document.getElementById("milliseconds").value = num;
 
 };
+
+function dateValuesChanged() {
+    
+    yearChanged();
+    monthChanged();
+    dayChanged();
+    hoursChanged();
+    minutesChanged();
+    secondsChanged();
+    millisecondsChanged(); 
+    
+}
 
 function loadMe() {
 
