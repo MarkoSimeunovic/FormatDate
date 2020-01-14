@@ -39,9 +39,9 @@ function daysInYear(year) {
     return isLeapYear(year) ? 366 : 365;
 };
 
-function daysInMonth(month) {
+function daysInMonth(year,month) {
 
-    if(!isNumber(month) || month < 0 || month > 11) {
+    if(!isNumber(year) ||!isNumber(month) || month < 0 || month > 11) {
         return 0;
     }
 
